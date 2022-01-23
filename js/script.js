@@ -3,10 +3,63 @@
 //const tiles = JSON.parse(tileData);
 const gameboard = document.getElementById("gameBoard");
 const players = document.getElementById("players");
+const corpListDiv = document.getElementById("newCorp");
 let playerTiles = document.getElementById("playerTiles");
+
 
 let activePlayer = 0;
 
+let corpList = 
+[
+    {
+        "ID" : "hotel0",
+        "Name" : "Luxor",
+        "ShortName" : "L",
+        "defaultColor" : "red"
+    },
+    {
+        "ID" : "hotel1",
+        "Name" : "Tower",
+        "ShortName" : "T",
+        "defaultColor" : "yellow"
+    },
+    {
+        "ID" : "hotel2",
+        "Name" : "Luxor",
+        "ShortName" : "L",
+        "defaultColor" : "red"
+    },
+    {
+        "ID" : "hotel3",
+        "Name" : "American",
+        "ShortName" : "A",
+        "defaultColor" : "dark-blue"
+    },
+    {
+        "ID" : "hotel4",
+        "Name" : "Festival",
+        "ShortName" : "F",
+        "defaultColor" : "green"
+    },
+    {
+        "ID" : "hotel5",
+        "Name" : "Worldwide",
+        "ShortName" : "W",
+        "defaultColor" : "brown"
+    },
+    {
+        "ID" : "hotel6",
+        "Name" : "Continental",
+        "ShortName" : "C",
+        "defaultColor" : "light-blue"
+    },
+    {
+        "ID" : "hotel7",
+        "Name" : "Imperial",
+        "ShortName" : "I",
+        "defaultColor" : "pink"
+    }
+]
 // player details
 let playerList = 
 [
@@ -18,7 +71,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 1 Tray",
         "WalletLabel": "Player 1 Wallet",
-        "StockPortfolioLabel": "Player 1 Portfolio"
+        "StockPortfolioLabel": "Player 1 Portfolio",
+        "Stocks" : []
     },
     {
         "PlayerID": 1,
@@ -28,7 +82,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 2 Tray",
         "WalletLabel": "Player 2 Wallet",
-        "StockPortfolioLabel": "Player 2 Portfolio"
+        "StockPortfolioLabel": "Player 2 Portfolio",
+        "Stocks" : []
     },
     {
         "PlayerID": 2,
@@ -38,7 +93,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 3 Tray",
         "WalletLabel": "Player 3 Wallet",
-        "StockPortfolioLabel": "Player 3 Portfolio"
+        "StockPortfolioLabel": "Player 3 Portfolio",
+        "Stocks" : []
     },
     {
         "PlayerID": 3,
@@ -48,7 +104,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 4 Tray",
         "WalletLabel": "Player 4 Wallet",
-        "StockPortfolioLabel": "Player 4 Portfolio"
+        "StockPortfolioLabel": "Player 4 Portfolio",
+        "Stocks" : []
     },
     {
         "PlayerID": 4,
@@ -58,7 +115,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 5 Tray",
         "WalletLabel": "Player 5 Wallet",
-        "StockPortfolioLabel": "Player 5 Portfolio"
+        "StockPortfolioLabel": "Player 5 Portfolio",
+        "Stocks" : []
     },
     {
         "PlayerID": 5,
@@ -68,7 +126,8 @@ let playerList =
         "AltLabel": "(custom names)",
         "TrayLabel": "Player 6 Tray",
         "WalletLabel": "Player 6 Wallet",
-        "StockPortfolioLabel": "Player 6 Portfolio"
+        "StockPortfolioLabel": "Player 6 Portfolio",
+        "Stocks" : []
     }
 ];
 
@@ -1437,6 +1496,11 @@ let tiles = [
     }
   ];
 
+// count number of tiles
+const tileLength = Object.keys(tiles).length;
+const corpLength = Object.keys(corpList).length;
+
+
 function init()
 {
     makeRows(9, 12);
@@ -1482,10 +1546,7 @@ function makeRows(rows, cols)
     gameboard.style.setProperty('--grid-rows', rows);
     gameboard.style.setProperty('--grid-cols', cols);
 
-    // count number of tiles
-    const length = Object.keys(tiles).length;
-  
-    for (c = 0; c < length; c++) {
+    for (c = 0; c < tileLength; c++) {
         let cell = document.createElement("div");
         
 
@@ -1534,15 +1595,13 @@ function setNextPlayer()
 
 function getPlayerTiles(playerID)
 {
-    const length = Object.keys(tiles).length;
-
     // recreate player tiles.
     while (playerTiles.firstChild) {
         playerTiles.firstChild.remove()
     }
 
     // Create player tiles
-    for (c = 0; c < length; c++) 
+    for (c = 0; c < tileLength; c++) 
     {
         if(tiles[c].owner == playerID && tiles[c].state == 0)
         {
@@ -1575,11 +1634,13 @@ function getPlayerTiles(playerID)
 
                 replaceUsedTile(playerID,tileIndex);
 
-                checkSidesForTiles (tiles[tileIndex]);
+                const foundTile = checkSidesForTiles (tiles[tileIndex]);
 
-                // move to next player's turn
-                setNextPlayer();
-            
+                if(!foundTile)
+                {
+                    // move to next player's turn
+                    setNextPlayer();
+                }
             });
 
         }
@@ -1589,13 +1650,12 @@ function getPlayerTiles(playerID)
 
 function replaceUsedTile(playerID,clickedTile)
 {
-    const length = Object.keys(tiles).length;
     const remainingTiles = [];
     tiles[clickedTile].state = 1;
     //console.log(playerID + clickedTile);
 
     // check for remaining tiles.
-    for (c = 0; c < length; c++) 
+    for (c = 0; c < tileLength; c++) 
     {
         if(tiles[c].owner == null)
         {
@@ -1619,13 +1679,11 @@ function replaceUsedTile(playerID,clickedTile)
 
 function generateRandomTiles(playerID)
 {
-    const length = Object.keys(tiles).length;
-    
     let randomTiles = [];
     
     while (randomTiles.length < 6) 
     {
-        const rand = Math.floor(Math.random() * length);
+        const rand = Math.floor(Math.random() * tileLength);
 
         if(tiles[rand].owner == null && tiles[rand].state == 0)
         {
@@ -1639,57 +1697,141 @@ function generateRandomTiles(playerID)
 
 function checkSidesForTiles (tile)
 {
-    const length = Object.keys(tiles).length;
+    
+    let foundSideTile = false;
     console.log('clicked tile: ' + tile.label);
-    for (c = 0; c < length; c++) 
+    for (c = 0; c < tileLength; c++) 
     {
         const sideTile = tiles[c].label
-        console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+        //console.log('before State Check: ' + c + ' ' + tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
         if(tiles[c].state == 1)
         {
             console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+            
 
             const tileElement = document.getElementById(tile.label);
             const sideTileElement = document.getElementById(sideTile);
             
-
             if(sideTile == tile.left)
             {
                 tileElement.style.backgroundColor = "green";
                 sideTileElement.style.backgroundColor = "green";
-
-                alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the LEFT!')
+                foundSideTile = true;
+                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the LEFT!')
             }else if(sideTile == tile.right)
             {
                 tileElement.style.backgroundColor = "green";
                 sideTileElement.style.backgroundColor = "green";
-                alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the RIGHT!')
+                foundSideTile = true;
+                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the RIGHT!')
             }else if(sideTile == tile.top)
             {
                 tileElement.style.backgroundColor = "green";
                 sideTileElement.style.backgroundColor = "green";
-                alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the TOP!')
+                foundSideTile = true;
+                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the TOP!')
             }
             else if(sideTile == tile.bottom)
             {
                 tileElement.style.backgroundColor = "green";
                 sideTileElement.style.backgroundColor = "green";
-                alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the BOTTOM!')
+                foundSideTile = true;
+                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the BOTTOM!')
+            }else{
+                foundSideTile = false;
             }
-        }
-           
 
+            console.log('foundSide: ' + foundSideTile)
+            if(foundSideTile)
+            {
+
+                var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
+                newCorpModal.show();
+
+                //listAvailableCorps();
+            }
+        }else{
+            foundSideTile = false;
+        }
+    }
+    return foundSideTile;
+    
+}
+
+function listAvailableCorps()
+{
+    console.log('corpLength: '+ corpLength)
+
+    for (c = 0; c < corpLength; c++) 
+    {
+        let corpCard = document.createElement("div");
+        corpListDiv.appendChild(corpCard).className = "card text-white bg-primary mb-3";
+        corpListDiv.appendChild(corpCard).id = corpList[c].id;
+
+        let cardBody = document.createElement("div");
+        corpCard.appendChild(cardBody).className = "card-body";
+
+        let cardTitle= document.createElement("h5");
+        cardTitle.innerText = corpList[c].Name;
+        cardBody.appendChild(cardTitle).className = "card-title";
+
+        let corpButton= document.createElement("a");
+        cardBody.appendChild(corpButton).className = "btn btn-primary";
         
+        //const corpLabel = tiles[c].label;
+        //const tileIndex = c;
+        //console.log(tiles[c].label) 
+
+
+        corpButton.addEventListener('click', function (event) 
+        {
+        
+            //let gameTile = document.getElementById(tileLabel);
+        });
+
+    
+    
     }
     
+}
+
+function startNewCorp()
+{
+
+}
+
+function stockModifier(tileCount, basePrice)
+{
+    let priceModified = basePrice;
+    const modifiedTileCount = tileCount - 2;
+
+    
+    if(modifiedTileCount = 1)
+    {
+        priceModified += 100;
+    }else if(modifiedTileCount = 2)
+    {
+        priceModified += 200;
+    }else if(modifiedTileCount = 3)
+    {
+        priceModified += 300;
+    }else if(modifiedTileCount = 3)
+    {
+        priceModified += 400;
+    }else if(modifiedTileCount >= 4 && modifiedTileCount <= 9)
+    {
+        priceModified += 500;
+    }
+
+    return priceModified;
 }
 
 
 init();
 
-const myModal = document.getElementById('buyModel')
+const buyModel = document.getElementById('buyModel')
 
-myModal.addEventListener('shown.bs.modal', function () {
+buyModel.addEventListener('shown.bs.modal', function () {
 
 })
 
