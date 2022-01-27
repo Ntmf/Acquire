@@ -9,6 +9,9 @@ let playerTiles = document.getElementById("playerTiles");
 
 let activePlayer = 0;
 
+let isAdmin = true;
+
+
 let corpList = 
 [
     {
@@ -1499,11 +1502,16 @@ let tiles = [
 // count number of tiles
 const tileLength = Object.keys(tiles).length;
 const corpLength = Object.keys(corpList).length;
-
+let playerCount = Object.keys(playerList).length;
 
 function init()
 {
     makeRows(9, 12);
+    if(isAdmin)
+    {
+        playerCount = 1;
+    }
+
     makePlayers();
 
     let playerCash = document.getElementById("playerCash");
@@ -1513,7 +1521,7 @@ function init()
 
 }
 
-const playerCount = Object.keys(playerList).length;
+
 
 function makePlayers()
 {
@@ -1552,6 +1560,7 @@ function makeRows(rows, cols)
 
     //cell.innerText = (col + 1 + (row+10).toString(36));
     cell.innerText = (tiles[c].label);
+    cell.setAttribute("data-index", c);
 
     gameboard.appendChild(cell).className = "grid-item";
     gameboard.appendChild(cell).id = tiles[c].label;
@@ -1572,7 +1581,7 @@ function setNextPlayer()
     }
 
     // if last player, reset to first player
-    if(activePlayer == playerCount - 1)
+    if(activePlayer == playerCount - 1 || isAdmin)
     {
         activePlayer = 0;
     }else{
@@ -1607,24 +1616,24 @@ function getPlayerTiles(playerID)
         {
             //console.log(tiles[c].owner + ' | ' + playerID)
 
-            let pt = "playerTile" + tiles[c].id;
+            let pt = "pt" + tiles[c].id;
        
             let tile = document.createElement("div");
             //tile.innerText = tiles[c].label;
 
             playerTiles.appendChild(tile).className = "col-lg-2";
 
-            playerTiles.appendChild(tile).id = pt;
-
             let tileButton = document.createElement("a");
             tileButton.innerText = tiles[c].label;
 
             tile.appendChild(tileButton).className = "p-2 btn btn-primary";
+            tile.appendChild(tileButton).id = pt;
+
             const tileLabel = tiles[c].label;
             const tileIndex = c;
             //console.log(tiles[c].label) 
 
-
+            /*
             tileButton.addEventListener('click', function (event) {
             
                 let gameTile = document.getElementById(tileLabel);
@@ -1642,9 +1651,63 @@ function getPlayerTiles(playerID)
                     setNextPlayer();
                 }
             });
+            */
 
         }
 
+    }
+}
+
+// Click on player tile
+gameboard.addEventListener('click', function(e) {
+    if (e.target.className !== "grid-item") return;
+
+    const tileButton = e.target;
+    //console.log(tileButton);
+    selectTile(tileButton,"gTile");
+    //console.log(tileButton.innerText);
+});
+
+// Click on board Tile
+playerTiles.addEventListener('click', function(e) {
+    if (e.target.nodeName.toUpperCase() !== "A") return;
+
+    const tileButton = e.target;
+   // console.log(tileButton);
+    selectTile(tileButton,"pTile");
+    //console.log(tileButton.innerText);
+});
+
+
+function selectTile(clickedTile, source)
+{
+    
+    let tileIndex = clickedTile.getAttribute("Id");
+
+    let gameTile
+    
+    if(source == "gTile")
+    {
+        tileIndex = clickedTile.getAttribute("data-index");
+    }
+
+    if(source == "pTile")
+    {
+        tileIndex = Number(tileIndex.replace("pt", ""));
+    }
+    
+    gameTile = document.getElementById(tiles[tileIndex].label);
+    gameTile.style.backgroundColor = "blue";
+    gameTile.style.color = "white";
+
+    replaceUsedTile(activePlayer,tileIndex);
+
+    const foundTile = checkSidesForTiles (tiles[tileIndex]);
+
+    if(!foundTile)
+    {
+        // move to next player's turn
+        setNextPlayer();
     }
 }
 
@@ -1689,6 +1752,7 @@ function generateRandomTiles(playerID)
         {
             tiles[rand].owner = playerID;
             randomTiles.push(tiles[rand].label);
+            
         }
     }
 
@@ -1741,18 +1805,22 @@ function checkSidesForTiles (tile)
                 foundSideTile = false;
             }
 
-            console.log('foundSide: ' + foundSideTile)
             if(foundSideTile)
             {
-
-                var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
-                newCorpModal.show();
-
-                //listAvailableCorps();
+                break;
             }
-        }else{
-            foundSideTile = false;
+            console.log('foundSide: ' + foundSideTile)
+            
         }
+    }
+
+    if(foundSideTile)
+    {
+        
+        var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
+        //newCorpModal.show();
+
+        //listAvailableCorps();
     }
     return foundSideTile;
     

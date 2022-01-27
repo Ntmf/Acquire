@@ -1,13 +1,14 @@
 {
     "Game": {
-        "Setup": {
+        "Setup": 
+        {
             "InitialCash": 6000,
+            "StockLimit" : 25,
             "StockGroup" : 
             [
                 {
                     "Name" : "Group 1",
                     "BasePrice" : 200
-    
                 }
             ]
         },
@@ -17,7 +18,7 @@
                 "Id": 0,
                 "Name" : "Player 1",
                 "Display": "Rob",
-                "Cash" : 6000,
+                "Cash" : 0,
                 "Tiles" : [],
                 "PlayerPortfolio": 
                 [
@@ -25,14 +26,20 @@
                         "Name" : "Luxor",
                         "Display" : "",
                         "Count" : 1
+                    },
+                    {
+                        "Name" : "Imperial",
+                        "Display" : "",
+                        "Count" : 1
                     }
+
                 ]
             },
             {
                 "Id": 1,
                 "Name" : "Player 2",
                 "Display": "Russell",
-                "Cash": 6000,
+                "Cash": 0,
                 "Tiles" : [],
                 "PlayerPortfolio": [
 
