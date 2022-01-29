@@ -206,17 +206,14 @@
                         let rand = Math.floor(Math.random() *  this.GameData.Tiles.length);
 
                         // 
-                        if(type == 'label')
+                        if(gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box")
                         {
-                            if(gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box" && !randomTiles.includes(gd.Tiles[rand].Asset))
+                            if(type == 'label' && !randomTiles.includes(gd.Tiles[rand].Asset))
                             {
                                 randomTiles.push(gd.Tiles[rand].Asset);
                             }
-                        }
-                        
-                        if(type == 'index')
-                        {
-                            if(gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box" && !randomTiles.includes(gd.Tiles[rand].AssetID))
+
+                            if(type == 'index' && !randomTiles.includes(gd.Tiles[rand].AssetID))
                             {
                                 randomTiles.push(gd.Tiles[rand].AssetID);
                             }
@@ -235,7 +232,6 @@
 
                 getAvailableTileCount : function () 
                 {
-                    // `this` points to the vm instance
                     console.log(this.GameData)
                     var count = 0;
                     for (c = 0; c < this.GameData.Tiles.length; c++) 
@@ -308,6 +304,73 @@
                 clickTile(tileLabel, tileIndex)
                 {
                     alert(tileLabel);
+                },
+
+                checkSidesForTiles (tile)
+                {
+                    
+                    let foundSideTile = false;
+                    console.log('clicked tile: ' + tile.label);
+                    for (c = 0; c < tileLength; c++) 
+                    {
+                        const sideTile = tiles[c].label
+                        //console.log('before State Check: ' + c + ' ' + tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+                        if(tiles[c].state == 1)
+                        {
+                            console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+                            
+
+                            const tileElement = document.getElementById(tile.label);
+                            const sideTileElement = document.getElementById(sideTile);
+                            
+                            if(sideTile == tile.left)
+                            {
+                                tileElement.style.backgroundColor = "green";
+                                sideTileElement.style.backgroundColor = "green";
+                                foundSideTile = true;
+                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the LEFT!')
+                            }else if(sideTile == tile.right)
+                            {
+                                tileElement.style.backgroundColor = "green";
+                                sideTileElement.style.backgroundColor = "green";
+                                foundSideTile = true;
+                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the RIGHT!')
+                            }else if(sideTile == tile.top)
+                            {
+                                tileElement.style.backgroundColor = "green";
+                                sideTileElement.style.backgroundColor = "green";
+                                foundSideTile = true;
+                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the TOP!')
+                            }
+                            else if(sideTile == tile.bottom)
+                            {
+                                tileElement.style.backgroundColor = "green";
+                                sideTileElement.style.backgroundColor = "green";
+                                foundSideTile = true;
+                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the BOTTOM!')
+                            }else{
+                                foundSideTile = false;
+                            }
+
+                            if(foundSideTile)
+                            {
+                                break;
+                            }
+                            console.log('foundSide: ' + foundSideTile)
+                            
+                        }
+                    }
+
+                    if(foundSideTile)
+                    {
+                        
+                        var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
+                        //newCorpModal.show();
+
+                        //listAvailableCorps();
+                    }
+                    return foundSideTile;
+                    
                 }
 
 
