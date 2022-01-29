@@ -5,5 +5,9 @@
     "version": "1.0.0",
     "main": "index.html",
     "type" : "module",
+    "engines": {
+        "node": "12.x",
+        "npm": "6.x"
+      },
     "dependencies": {}
 }
