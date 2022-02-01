@@ -103,32 +103,38 @@
                             Buy Stock
                         </button>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="card">
-                                <h5 class="card-header">
-                                    Cash
-                                </h5>
-                                <div class="card-body">
-                                    <p id="playerCash"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
 
                     <div class="row py-2">
                         <div class="col">
-                            <div class="card">
-                                <h5 class="card-header">
-                                    Stock
-                                </h5>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">An item</li>
-                                    <li class="list-group-item">A second item</li>
-                                    <li class="list-group-item">A third item</li>
-                                </ul>
+                            <div class="card border-secondary">
+                                <div class="card-body">
+                                  
+                                <table class="table table-sm table-borderless">
+                                      <tbody>
+                                        <tr>
+                                          <!--<th scope="row">1</th>-->
+                                          <td colspan="2" class="fw-bold" >Player Cash</td>
+                                          <td class="text-end">$5000</td>
+                                        </tr>
+                                        <tr>
+                                           <!--<th scope="row">2</th>-->
+                                          <td colspan="2" class="fw-bold">Stock Portfolio</td>
+                                          <td class="fw-bold text-end">Value</td>
+                                        </tr>
+
+                                        <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
+                                            <td>{{ portfolio.Display }}</td>
+                                            <td>{{ portfolio.Count }}</td>
+                                            <td class="text-end">$400</td>
+                                        </tr>
+                                        <tr>
+                                         <!--  <th scope="row">3</th>-->
+                                          <td colspan="2" class="fw-bold">Net Worth</td>
+                                          <td class="text-end fw-bold">$800</td>
+                                        </tr>
+                                      </tbody>
+                                  </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,7 +143,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
-                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item" v-bind:id="tile.AssetID" v-on:click="clickTile(tile.Asset, tile.AssetID)" v-bind:class="{'bg-secondary' : tile.Location === 'Board'}">
+                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item" v-bind:id="tile.AssetID" v-on:click="clickTile(tile.Asset, tile.AssetID)" v-bind:class="tile.StyleClass">
                                     {{ tile.Asset }}
                                 </div>
                             </div>
@@ -145,6 +151,72 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
+ <!-- Buy Stock Modal -->
+ <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+            <table class="table">
+               <!-- <thead>
+                    <tr>
+                        <th scope="col">Action</th>
+                        <th scope="col">Corporation</th>
+                        <th scope="col">Cost</th>
+                    </tr>
+                </thead>
+            -->
+
+                <tbody>
+                <!-- On rows -->
+                <tr v-for="(corp, index) in GameData.Corporations">
+                    <td>
+                       
+                        {{ corp.Count}}
+                    </td>
+                    <td>
+                        <span class="p-2 m-1 text-white" v-bind:class="corp.StyleClass">{{ corp.ShortName }}</span>
+                        {{ corp.Name}}
+                        </td>
+                        <td>$000</td>
+                    <td>
+                        
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-light">-</a>
+                            <a href="#" class="btn btn-light">+</a>
+                          </div>
+                    </td>
+                   
+                    <td>2</td>
+                </tr>
+
+                <tr></tr>
+               
+            </tbody>
+            </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
         </div>
     </div>
 
@@ -187,7 +259,24 @@
                     {
                         return this.getAvailableTileCount();
                     }
+                },
+
+                totalTileCount ()
+                {
+                    if(this.appLoaded)
+                    {
+                        return this.getTileCount();
+                    }
+                },
+                activePlayer ()
+                {
+                    if(this.appLoaded)
+                    {
+                        return this.getActivePlayer();
+                    }
                 }
+
+
                
                 
             },
@@ -260,8 +349,14 @@
 
                 },
                 
-                // This assigns 6 initial tiles to each player at the beginning of the game. 
 
+                getActivePlayer()
+                {
+                    const player = this.GameData.PlayerList[this.ActivePlayerIndex]
+                    return player
+                },
+
+                // This assigns 6 initial tiles to each player at the beginning of the game. 
                 assignInitialPlayerTiles()
                 {
                     //let gd = this.GameData;
@@ -298,62 +393,53 @@
                         const randomTile = this.getRandomAvailableTiles (1,'index'); 
                         this.GameData.Tiles[randomTile].Location = "Board";
                         this.GameData.Tiles[randomTile].Owner = playerId;
+                        this.GameData.Tiles[randomTile].StyleClass = 'bg-secondary';
                     }
                 },
 
                 clickTile(tileLabel, tileIndex)
                 {
-                    alert(tileLabel);
+                    this.checkSidesForTiles(tileLabel, tileIndex);
                 },
 
-                checkSidesForTiles (tile)
+                checkSidesForTiles (tileLabel, tileIndex)
                 {
                     
                     let foundSideTile = false;
-                    console.log('clicked tile: ' + tile.label);
-                    for (c = 0; c < tileLength; c++) 
+                   // console.log('clicked tile: ' + tile.label);
+                    for (c = 0; c < this.totalTileCount; c++) 
                     {
-                        const sideTile = tiles[c].label
+                        const sideTile = this.GameData.Tiles[c].label
                         //console.log('before State Check: ' + c + ' ' + tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
-                        if(tiles[c].state == 1)
+                        if(this.GameData.Tiles[c].Location == 'Board') // Will need to add more locations later.
                         {
-                            console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+                            // console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
                             
 
-                            const tileElement = document.getElementById(tile.label);
-                            const sideTileElement = document.getElementById(sideTile);
+                            //const tileElement = document.getElementById(tile.label);
+                            //const sideTileElement = document.getElementById(sideTile);
+
+                            const left = this.GameData.Tiles[c].Left;
+                            const right = this.GameData.Tiles[c].Right;
+                            const top = this.GameData.Tiles[c].Top;
+                            const bottom = this.GameData.Tiles[c].Bottom;
+
+                            const mergedClass = 'bg-secondary bg-gradient';
                             
-                            if(sideTile == tile.left)
+                            if(sideTile == left || sideTile == right || sideTile == top || sideTile == bottom)
                             {
-                                tileElement.style.backgroundColor = "green";
-                                sideTileElement.style.backgroundColor = "green";
+                                
                                 foundSideTile = true;
                                 //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the LEFT!')
-                            }else if(sideTile == tile.right)
-                            {
-                                tileElement.style.backgroundColor = "green";
-                                sideTileElement.style.backgroundColor = "green";
-                                foundSideTile = true;
-                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the RIGHT!')
-                            }else if(sideTile == tile.top)
-                            {
-                                tileElement.style.backgroundColor = "green";
-                                sideTileElement.style.backgroundColor = "green";
-                                foundSideTile = true;
-                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the TOP!')
-                            }
-                            else if(sideTile == tile.bottom)
-                            {
-                                tileElement.style.backgroundColor = "green";
-                                sideTileElement.style.backgroundColor = "green";
-                                foundSideTile = true;
-                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the BOTTOM!')
                             }else{
                                 foundSideTile = false;
                             }
 
                             if(foundSideTile)
                             {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tileIndex].StyleClass = mergedClass;
+
                                 break;
                             }
                             console.log('foundSide: ' + foundSideTile)
@@ -364,12 +450,12 @@
                     if(foundSideTile)
                     {
                         
-                        var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
+                        //var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
                         //newCorpModal.show();
-
+                        alert(tileLabel);
                         //listAvailableCorps();
                     }
-                    return foundSideTile;
+                   // return foundSideTile;
                     
                 }
 
