@@ -13,9 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- development version, includes helpful console warnings -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <link type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <script type="text/javascript" src="js/dataModel.js"></script>
     <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
@@ -27,7 +29,6 @@
 
     <div id="app">
         <div class="container">
-
             <div class="row py-2">
                 <div class="col">
                     <div class="card">
@@ -37,60 +38,15 @@
                         <div class="card-body">
                             <div id="playerTiles" class="row">
                                 <ul class="list-group list-group-horizontal">
-                                    <li class="col list-group-item">Player Count:  {{ playerCount }}</li>
-                                    <li class="col list-group-item">Available Tile Count:  {{ availableTileCount }}</li>
-                                    <li class="col list-group-item">Active Player Index:  {{ ActivePlayerIndex }}</li>
+                                    <li class="col list-group-item">Player Count: {{ playerCount }}</li>
+                                    <li class="col list-group-item">Available Tile Count: {{ availableTileCount }}</li>
+                                    <li class="col list-group-item">Active Player Index: {{ ActivePlayerIndex }}</li>
                                 </ul>
 
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="row py-2">
-                <div class="col">
-                    <div class="card">
-                        <h5 class="card-header">
-                            Players
-                        </h5>
-                        <div class="card-body">
-                            <div id="players" class="row">
-                                <ul class="list-group list-group-horizontal">
-                                    <li v-for="(player, index) in GameData.PlayerList" class="col list-group-item"
-                                        v-bind:class="{'list-group-item-primary' : index === GameData.State.ActivePlayerIndex}">
-                                        <span class="bi bi-person-circle">
-                                            {{ player.Display }}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="row py-2">
-                <div class="col">
-                    <div class="card">
-                        <h5 class="card-header">
-                            Tiles
-                        </h5>
-                        <div class="card-body">
-                            <div id="playerTiles" class="row">
-                                <ul class="list-group list-group-horizontal">
-                                   <li v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex" class="col list-group-item" v-on:click="clickTile(tile.Asset, tile.AssetID)">
-                                         <h3 class="text-center">{{ tile.Asset }}</h3>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
             <div class="row py-2">
                 <div class="col-lg-3">
@@ -105,44 +61,69 @@
 
                     <div class="row py-2">
                         <div class="col">
-                            <div class="card border-secondary">
-                                <div class="card-body">
-                                  
-                                <table class="table table-sm table-borderless">
-                                      <tbody>
-                                        <tr>
-                                          <!--<th scope="row">1</th>-->
-                                          <td colspan="2" class="fw-bold" >Player Cash</td>
-                                          <td class="text-end">$5000</td>
-                                        </tr>
-                                        <tr>
-                                           <!--<th scope="row">2</th>-->
-                                          <td colspan="2" class="fw-bold">Stock Portfolio</td>
-                                          <td class="fw-bold text-end">Value</td>
-                                        </tr>
-
-                                        <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
-                                            <td>{{ portfolio.Display }}</td>
-                                            <td>{{ portfolio.Count }}</td>
-                                            <td class="text-end">$400</td>
-                                        </tr>
-                                        <tr>
-                                         <!--  <th scope="row">3</th>-->
-                                          <td colspan="2" class="fw-bold">Net Worth</td>
-                                          <td class="text-end fw-bold">$800</td>
-                                        </tr>
-                                      </tbody>
-                                  </table>
+                            <div class="card">
+                            <h5 class="card-header">
+                                Players
+                            </h5>
+                            <div class="card-body">
+                                <div id="players" class="row">
+                                    <ul class="list-group">
+                                        <li v-for="(player, index) in GameData.PlayerList" class="col list-group-item"
+                                            v-bind:class="{'list-group-item-primary' : index === ActivePlayerIndex}" 
+                                            v-on:click="setActivePlayer(index)">
+                                            <span class="bi bi-person-circle">
+                                                {{ player.Display }}
+                                            </span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </div>
+
+                    <div class="row py-2">
+                        <div class="col">
+                            <div class="card border-secondary">
+                                <div class="card-body">
+
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <!--<th scope="row">1</th>-->
+                                                <td colspan="2" class="fw-bold">Player Cash</td>
+                                                <td class="text-end">$5000</td>
+                                            </tr>
+                                            <tr>
+                                                <!--<th scope="row">2</th>-->
+                                                <td colspan="2" class="fw-bold">Stock Portfolio</td>
+                                                <td class="fw-bold text-end">Value</td>
+                                            </tr>
+
+                                            <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
+                                                <td>{{ portfolio.Display }}</td>
+                                                <td>{{ portfolio.Count }}</td>
+                                                <td class="text-end">$400</td>
+                                            </tr>
+                                            <tr>
+                                                <!--  <th scope="row">3</th>-->
+                                                <td colspan="2" class="fw-bold">Net Worth</td>
+                                                <td class="text-end fw-bold">$800</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-body">
                             <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
-                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item" v-bind:id="tile.AssetID" v-on:click="clickTile(tile.Asset, tile.AssetID)" v-bind:class="tile.StyleClass">
+                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select" v-bind:id="tile.AssetID"
+                                    v-on:click="clickTile(tile)" v-bind:class="tile.StyleClass">
                                     {{ tile.Asset }}
                                 </div>
                             </div>
@@ -156,18 +137,18 @@
 
 
 
- <!-- Buy Stock Modal -->
- <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          
-            <table class="table">
-               <!-- <thead>
+            <!-- Buy Stock Modal -->
+            <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <table class="table">
+                                <!-- <thead>
                     <tr>
                         <th scope="col">Action</th>
                         <th scope="col">Corporation</th>
@@ -176,47 +157,64 @@
                 </thead>
             -->
 
-                <tbody>
-                <!-- On rows -->
-                <tr v-for="(corp, index) in GameData.Corporations">
-                    <td>
-                       
-                        {{ corp.Count}}
-                    </td>
-                    <td>
-                        <span class="p-2 m-1 text-white" v-bind:class="corp.StyleClass">{{ corp.ShortName }}</span>
-                        {{ corp.Name}}
-                        </td>
-                        <td>$000</td>
-                    <td>
-                        
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-light">-</a>
-                            <a href="#" class="btn btn-light">+</a>
-                          </div>
-                    </td>
-                   
-                    <td>2</td>
-                </tr>
+                                <tbody>
+                                    <!-- On rows -->
+                                    <tr v-for="(corp, index) in GameData.Corporations">
+                                        <td>
 
-                <tr></tr>
-               
-            </tbody>
-            </table>
+                                            {{ corp.Count}}
+                                        </td>
+                                        <td>
+                                            <span class="p-2 m-1 text-white" v-bind:class="corp.StyleClass">{{
+                                                corp.ShortName }}</span>
+                                            {{ corp.Name}}
+                                        </td>
+                                        <td>$000</td>
+                                        <td>
+
+                                            <div class="btn-group">
+                                                <a href="#" class="btn btn-light">-</a>
+                                                <a href="#" class="btn btn-light">+</a>
+                                            </div>
+                                        </td>
+
+                                        <td>2</td>
+                                    </tr>
+
+                                    <tr></tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
 
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-
-
-
-        </div>
+        <footer class="footer mt-auto py-3 bg-light fixed-bottom">
+            <div class="container">
+                <div id="playerTiles" class="row">
+                    <div class="position-absolute top-50 start-50 translate-middle w-25">
+                        <ul class="list-group list-group-horizontal ">
+                            <li v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex"
+                                class="col list-group-item shadow-sm m-1 bg-primary bg-gradient text-white rounded shadow-sm"
+                                v-on:click="clickTile(tile)">
+                                <h3 class="text-center disable-select">{{ tile.Asset }}</h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -225,92 +223,78 @@
             data: {
                 GameData: '',
                 appLoaded: false,
-                ActivePlayerIndex: 0
+                ActivePlayerIndex: 1,
+                InitialTileColorClasses : 'bg-secondary text-white'
             },
 
-            mounted() 
-            { // when the Vue app is booted up, this is run automatically.
+            mounted() { // when the Vue app is booted up, this is run automatically.
                 var self = this // create a closure to access component in the callback below
                 self.GameData = data.Game;
                 this.appLoaded = true;
                 this.assignStartTiles();
                 this.assignInitialPlayerTiles();
-                
+                console.log(data.Game);
 
             },
 
-            computed : 
+            computed:
             {
-                
-                playerCount ()
-                {
-                    if(this.appLoaded)
-                    {
-                       // console.log(this.GameData);
+
+                playerCount() {
+                    if (this.appLoaded) {
+                        // console.log(this.GameData);
                         return this.getPlayerCount();
                     }
-                    
+
                 },
 
-                availableTileCount ()
-                {
-                    if(this.appLoaded)
-                    {
+                availableTileCount() {
+                    if (this.appLoaded) {
                         return this.getAvailableTileCount();
                     }
                 },
 
-                totalTileCount ()
-                {
-                    if(this.appLoaded)
-                    {
+                totalTileCount() {
+                    if (this.appLoaded) {
                         return this.getTileCount();
                     }
                 },
-                activePlayer ()
-                {
-                    if(this.appLoaded)
-                    {
+                activePlayer() {
+                    if (this.appLoaded) {
                         return this.getActivePlayer();
                     }
                 }
 
 
-               
-                
+
+
             },
-            methods: 
+            methods:
             {
-                getRandomAvailableTiles: function (count, type) 
-                {
+                getRandomAvailableTiles: function (count, type) {
                     let randomTiles = [];
-                    
+
                     let gd = this.GameData;
 
                     let countbreak = 0;
 
-                    while (randomTiles.length < count) 
-                    {
-                        let rand = Math.floor(Math.random() *  this.GameData.Tiles.length);
+                    while (randomTiles.length < count) {
+                        let rand = Math.floor(Math.random() * this.GameData.Tiles.length);
 
                         // 
-                        if(gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box")
-                        {
-                            if(type == 'label' && !randomTiles.includes(gd.Tiles[rand].Asset))
-                            {
+                        if (gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box") {
+                            if (type == 'label' && !randomTiles.includes(gd.Tiles[rand].Asset)) {
                                 randomTiles.push(gd.Tiles[rand].Asset);
                             }
 
-                            if(type == 'index' && !randomTiles.includes(gd.Tiles[rand].AssetID))
-                            {
+                            if (type == 'index' && !randomTiles.includes(gd.Tiles[rand].AssetID)) {
                                 randomTiles.push(gd.Tiles[rand].AssetID);
                             }
                         }
 
-                        countbreak ++;
+                        countbreak++;
 
-                        if(countbreak >= this.GameData.Tiles.length)
-                        {
+                        if (countbreak >= this.GameData.Tiles.length) {
                             break;
                         }
                     }
@@ -318,149 +302,178 @@
                     return randomTiles;
                 },
 
-                getAvailableTileCount : function () 
-                {
+                getAvailableTileCount: function () {
                     console.log(this.GameData)
                     var count = 0;
-                    for (c = 0; c < this.GameData.Tiles.length; c++) 
-                    {
-                        if(this.GameData.Tiles[c].Location == "Tile Box")
-                        {
-                            count ++;
+                    for (c = 0; c < this.GameData.Tiles.length; c++) {
+                        if (this.GameData.Tiles[c].Location == "Tile Box") {
+                            count++;
                         }
                     }
                     return count;
                 },
 
-                getTileCount : function () 
-                {
-                    return  Object.keys(this.GameData.Tiles).length 
+                getTileCount: function () {
+                    return Object.keys(this.GameData.Tiles).length
 
                 },
 
                 // a computed getter
-                getPlayerCount : function ()  
-                {
+                getPlayerCount: function () {
                     console.log(this.GameData)
                     // `this` points to the vm instance
-                    return Object.keys(this.GameData.PlayerList).length 
+                    return Object.keys(this.GameData.PlayerList).length
 
 
                 },
-                
 
-                getActivePlayer()
-                {
+
+                getActivePlayer() {
                     const player = this.GameData.PlayerList[this.ActivePlayerIndex]
                     return player
                 },
 
-                // This assigns 6 initial tiles to each player at the beginning of the game. 
-                assignInitialPlayerTiles()
+                getPlayerTileCount()
                 {
-                    //let gd = this.GameData;
-                    const pc =  this.getPlayerCount();
-                    for (c = 0; c < pc; c++)
+                    playerTileCount = 0;
+                    for (c = 0; c < this.totalTileCount; c++) 
                     {
+                        if(this.ActivePlayerIndex == this.GameData.Tiles[c].Owner &&  this.GameData.Tiles[c].Location == 'Player')
+                        {
+                            playerTileCount ++;
+                        }
+                    }
+
+                    return playerTileCount;
+                },
+
+                setActivePlayer(playerIndex)
+                {
+                    this.ActivePlayerIndex = playerIndex;
+                },
+
+                // This assigns 6 initial tiles to each player at the beginning of the game. 
+                assignInitialPlayerTiles() {
+                    //let gd = this.GameData;
+                    const pc = this.getPlayerCount();
+                    for (c = 0; c < pc; c++) {
                         let playerId = this.GameData.PlayerList[c].Id
-                        const randomTiles = this.getRandomAvailableTiles (6, 'label'); 
+                        const randomTiles = this.getRandomAvailableTiles(6, 'label');
                         this.GameData.PlayerList[c].Tiles = randomTiles;
 
-                        
+
                         // Assign owner and move Tile to "Player Location"
-                        for(t= 0; t < this.GameData.Tiles.length; t++)
-                        {
+                        for (t = 0; t < this.GameData.Tiles.length; t++) {
                             // Find the random tiles in the randomTile list.
-                            if(randomTiles.includes(this.GameData.Tiles[t].Asset))
-                            {
+                            if (randomTiles.includes(this.GameData.Tiles[t].Asset)) {
                                 this.GameData.Tiles[t].Location = "Player";
                                 this.GameData.Tiles[t].Owner = playerId;
                             }
                         }
-                    } 
+                    }
                 },
 
                 // This assigns the starting tile for each player and places on the board
-                assignStartTiles()
-                {
-                    const pc =  this.getPlayerCount();
+                assignStartTiles() {
+                    const pc = this.getPlayerCount();
 
-                    for (c = 0; c < pc; c++)
-                    {
+                    for (c = 0; c < pc; c++) {
                         let playerId = this.GameData.PlayerList[c].Id
-                        
-                        const randomTile = this.getRandomAvailableTiles (1,'index'); 
+
+                        const randomTile = this.getRandomAvailableTiles(1, 'index');
                         this.GameData.Tiles[randomTile].Location = "Board";
                         this.GameData.Tiles[randomTile].Owner = playerId;
-                        this.GameData.Tiles[randomTile].StyleClass = 'bg-secondary';
+                        this.GameData.Tiles[randomTile].StyleClass = this.InitialTileColorClasses;
                     }
                 },
 
-                clickTile(tileLabel, tileIndex)
-                {
-                    this.checkSidesForTiles(tileLabel, tileIndex);
+                clickTile(tile) {
+                    this.checkSidesForTiles(tile);
+
+
+                    // if there are less than 6 tiles, give a random tile to the player.
+                    console.log(this.getPlayerTileCount());
+
+                    if(this.getPlayerTileCount() < 7 )
+                    {
+                        this.givePlayerTile();
+                    }
                 },
 
-                moveTile(location, tileIndex)
+                givePlayerTile()
                 {
+                    const randomTile = this.getRandomAvailableTiles(1, 'index');
+                    this.GameData.Tiles[randomTile].Location = "Player";
+                    this.GameData.Tiles[randomTile].Owner = this.ActivePlayerIndex;
+                },
+
+                moveTile(location, tileIndex) {
                     // TODO:
                 },
 
-                checkSidesForTiles (tileLabel, tileIndex)
-                {
-                    
+                checkSidesForTiles(tile) {
+
                     let foundSideTile = false;
-                   // console.log('clicked tile: ' + tile.label);
-                    for (c = 0; c < this.totalTileCount; c++) 
-                    {
-                        const sideTile = this.GameData.Tiles[c].label
-                        //console.log('before State Check: ' + c + ' ' + tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
-                        if(this.GameData.Tiles[c].Location == 'Board') // Will need to add more locations later.
+                    // console.log('clicked tile: ' + tile.label);
+                    for (c = 0; c < this.totalTileCount; c++) {
+                        const sideTile = this.GameData.Tiles[c].Asset
+                        //console.log('before State Check: ' + this.GameData.Tiles[c].Asset + ' ' + tile.Left + ' ' + tile.Right + ' ' + tile.Up + ' ' + tile.Down)
+
+                        if (this.GameData.Tiles[c].Location == 'Board') // Will need to add more locations later.
                         {
-                            // console.log(tile.left + ' ' + tile.right + ' ' + tile.top + ' ' + tile.bottom)
+                            //console.log(this.GameData.Tiles[c].Location);
                             
+                            const mergedClass = 'bg-primary bg-gradient text-white rounded shadow-sm';
 
-                            //const tileElement = document.getElementById(tile.label);
-                            //const sideTileElement = document.getElementById(sideTile);
-
-                            const left = this.GameData.Tiles[c].Left;
-                            const right = this.GameData.Tiles[c].Right;
-                            const top = this.GameData.Tiles[c].Top;
-                            const bottom = this.GameData.Tiles[c].Bottom;
-
-                            const mergedClass = 'bg-primary bg-gradient text-white';
                             
-                            if(sideTile == left || sideTile == right || sideTile == top || sideTile == bottom)
-                            {
-                                
+                            let playerId = this.GameData.PlayerList[this.ActivePlayerIndex].Id
+
+                            if (sideTile == tile.Left) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
                                 foundSideTile = true;
-                                //alert('Yay! You (' + tile.label + ') found a friend (' + sideTile + ') to the LEFT!')
-                            }else{
+                            }
+                            else if (sideTile == tile.Right) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                            }
+                            else if (sideTile == tile.Up) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                            }
+                            else if (sideTile == tile.Down) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                            } else {
                                 foundSideTile = false;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = 'bg-secondary text-white rounded shadow-sm';
+
+                                this.GameData.Tiles[tile.AssetID].Location = "Board";
+                                this.GameData.Tiles[tile.AssetID].Owner = "";
                             }
 
-                            if(foundSideTile)
-                            {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tileIndex].StyleClass = mergedClass;
+
+                            if (foundSideTile) {
+                                //alert('Yay! You (' + tile.Asset + ') found a friend (' + sideTile + ') to the LEFT!')
 
                                 break;
                             }
-                            console.log('foundSide: ' + foundSideTile)
-                            
+
                         }
                     }
 
-                    if(foundSideTile)
-                    {
-                        
+                    if (foundSideTile) {
+
                         //var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
                         //newCorpModal.show();
-                        alert(tileLabel);
+                        //alert(tileLabel);
                         //listAvailableCorps();
                     }
-                   // return foundSideTile;
-                    
+                    // return foundSideTile;
+
                 }
 
 
@@ -473,7 +486,7 @@
         })
 
     </script>
-   <!-- <script src="" async defer></script>-->
+    <!-- <script src="" async defer></script>-->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
