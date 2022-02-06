@@ -50,6 +50,20 @@ let data =
           "PlayerPortfolio": [
 
           ]
+        },
+        {
+          "Id": 3,
+          "Name": "Player 3",
+          "Display": "Leesa",
+          "Cash": 6000,
+          "Tiles": [],
+          "PlayerPortfolio": [
+{
+                "Name": "Imperial",
+                "Display": "Imperial",
+                "Count": 13
+              }
+          ]
         }
       ],
     "Corporations":
