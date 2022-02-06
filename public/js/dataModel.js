@@ -245,7 +245,7 @@ let data =
           "Column": 6,
           "X": 5,
           "Y": 0,
-          "Location": "Corporation",
+          "Location": "Tile Box",
           "Owner": "",
           "StyleClass": "",
           "Neighbors": ["5A", "7A", "", "6B"],
