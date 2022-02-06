@@ -52,7 +52,7 @@ let data =
           ]
         },
         {
-          "Id": 3,
+          "Id": 2,
           "Name": "Player 3",
           "Display": "Leesa",
           "Cash": 6000,
