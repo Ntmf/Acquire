@@ -282,7 +282,8 @@
                         let rand = Math.floor(Math.random() * this.GameData.Tiles.length);
 
                         // 
-                        if (gd.Tiles[rand].Owner == "" && gd.Tiles[rand].Location == "Tile Box") {
+                        if (gd.Tiles[rand].Location == "Tile Box") 
+                        {
                             if (type == 'label' && !randomTiles.includes(gd.Tiles[rand].Asset)) {
                                 randomTiles.push(gd.Tiles[rand].Asset);
                             }
