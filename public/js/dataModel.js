@@ -55,7 +55,7 @@ let data =
           "Id": 2,
           "Name": "Player 3",
           "Display": "Leesa",
-          "Cash": 6000,
+          "Cash": 0,
           "Tiles": [],
           "PlayerPortfolio": [
 {
@@ -75,7 +75,7 @@ let data =
             "ShortName": "L",
             "DefaultColor": "red",
             "Status": "Inactive",
-            "StyleClass": "bg-primary",
+            "StyleClass": "bg-primary text-white",
             "Count": 0,
             "Tiles": []
           },
@@ -86,7 +86,7 @@ let data =
             "ShortName": "T",
             "DefaultColor": "yellow",
             "Status": "Inactive",
-            "StyleClass": "bg-success",
+            "StyleClass": "bg-success text-white",
             "Count": 0,
             "Tiles": []
           },
@@ -97,7 +97,7 @@ let data =
             "ShortName": "A",
             "DefaultColor": "dark-blue",
             "Status": "Inactive",
-            "StyleClass": "bg-danger",
+            "StyleClass": "bg-danger text-white",
             "Count": 0,
             "Tiles": []
           },
@@ -108,7 +108,7 @@ let data =
             "ShortName": "F",
             "DefaultColor": "green",
             "Status": "Inactive",
-            "StyleClass": "bg-warning",
+            "StyleClass": "bg-warning text-white",
             "Count": 0,
             "Tiles": []
           },
@@ -119,7 +119,7 @@ let data =
             "ShortName": "W",
             "DefaultColor": "brown",
             "Status": "Inactive",
-            "StyleClass": "bg-info",
+            "StyleClass": "bg-info text-dark",
             "Count": 0,
             "Tiles": []
           },
@@ -130,7 +130,7 @@ let data =
             "ShortName": "C",
             "DefaultColor": "light-blue",
             "Status": "Inactive",
-            "StyleClass": "bg-secondary",
+            "StyleClass": "bg-secondary text-white",
             "Count": 0,
             "Tiles": []
           },
@@ -141,7 +141,7 @@ let data =
             "ShortName": "I",
             "DefaultColor": "pink",
             "Status": "Inactive",
-            "StyleClass": "bg-dark",
+            "StyleClass": "bg-dark text-white",
             "Count": 0,
             "Tiles": []
           }

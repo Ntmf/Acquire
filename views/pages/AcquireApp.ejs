@@ -22,13 +22,19 @@
     <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="bg-dark">
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
     <div id="app">
+
+
+
+
         <div class="container">
+
+
             <div class="row py-2">
                 <div class="col">
                     <div class="card">
@@ -49,81 +55,13 @@
                 </div>
             </div>
             <div class="row py-2">
-                <div class="col-lg-3">
-
-                    <div class="row m-1">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="col btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#buyModel">
-                            Buy Stock
-                        </button>
-                    </div>
-
-                    <div class="row py-2">
-                        <div class="col">
-                            <div class="card">
-                            <h5 class="card-header">
-                                Players
-                            </h5>
-                            <div class="card-body">
-                                <div id="players" class="row">
-                                    <ul class="list-group">
-                                        <li v-for="(player, index) in GameData.PlayerList" class="col list-group-item"
-                                            v-bind:class="{'list-group-item-primary' : index === ActivePlayerIndex}" 
-                                            v-on:click="setActivePlayer(index)">
-                                            <span class="bi bi-person-circle">
-                                                {{ player.Display }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="row py-2">
-                        <div class="col">
-                            <div class="card border-secondary">
-                                <div class="card-body">
-
-                                    <table class="table table-sm table-borderless">
-                                        <tbody>
-                                            <tr>
-                                                <!--<th scope="row">1</th>-->
-                                                <td colspan="2" class="fw-bold">Player Cash</td>
-                                                <td class="text-end">$5000</td>
-                                            </tr>
-                                            <tr>
-                                                <!--<th scope="row">2</th>-->
-                                                <td colspan="2" class="fw-bold">Stock Portfolio</td>
-                                                <td class="fw-bold text-end">Value</td>
-                                            </tr>
-
-                                            <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
-                                                <td>{{ portfolio.Display }}</td>
-                                                <td>{{ portfolio.Count }}</td>
-                                                <td class="text-end">$400</td>
-                                            </tr>
-                                            <tr>
-                                                <!--  <th scope="row">3</th>-->
-                                                <td colspan="2" class="fw-bold">Net Worth</td>
-                                                <td class="text-end fw-bold">$800</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="col-lg-9">
+                <div class="col">
                     <div class="card">
                         <div class="card-body">
                             <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
-                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select" v-bind:id="tile.AssetID"
-                                    v-on:click="clickTile(tile)" v-bind:class="tile.StyleClass">
+                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select"
+                                    v-bind:id="tile.AssetID" v-on:click="clickTile(tile)"
+                                    v-bind:class="tile.StyleClass">
                                     {{ tile.Asset }}
                                 </div>
                             </div>
@@ -133,7 +71,30 @@
             </div>
 
 
+            <!--Create Corp Modal -->
+            <div class="modal fade" id="startCorp" tabindex="-1" aria-labelledby="startCorpLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="startCorpLabel">Start Corp</h5>
+                            <!--
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            -->
+                        </div>
+                        <div class="modal-body">
+                            <!-- On rows -->
+                            <div v-for="(corp, index) in GameData.Corporations" v-if="corp.Status === 'Inactive' ">
 
+                                <div class="card mb-3"  v-bind:class="corp.StyleClass" v-on:click="createCorp(corp)">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ corp.Name}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -200,18 +161,92 @@
 
         </div>
 
+        <div class="position-relative">
+            <div class="position-sticky bottom-0 start-0">
+                <div class="d-inline-flex p-2 bd-highlight">
+                    <div class="card border-secondary">
+                        <div class="card-body">
+
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <!--<th scope="row">1</th>-->
+                                        <td colspan="2" class="fw-bold">Player Cash</td>
+                                        <td class="text-end">${{activePlayer.Cash}}</td>
+                                    </tr>
+                                    <tr>
+                                        <!--<th scope="row">2</th>-->
+                                        <td colspan="2" class="fw-bold">Stock Portfolio</td>
+                                        <td class="fw-bold text-end">Value</td>
+                                    </tr>
+
+                                    <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
+                                        <td>{{ portfolio.Display }}</td>
+                                        <td>{{ portfolio.Count }}</td>
+                                        <td class="text-end">$400</td>
+                                    </tr>
+                                    <tr>
+                                        <!--  <th scope="row">3</th>-->
+                                        <td colspan="2" class="fw-bold">Net Worth</td>
+                                        <td class="text-end fw-bold">$800</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer class="footer mt-auto py-3 bg-light fixed-bottom">
             <div class="container">
                 <div id="playerTiles" class="row">
-                    <div class="position-absolute top-50 start-50 translate-middle w-25">
-                        <ul class="list-group list-group-horizontal ">
-                            <li v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex"
-                                class="col list-group-item shadow-sm m-1 bg-primary bg-gradient text-white rounded shadow-sm"
-                                v-on:click="clickTile(tile)">
-                                <h3 class="text-center disable-select">{{ tile.Asset }}</h3>
-                            </li>
-                        </ul>
+                    <div class="col-lg-3 col-md-2">
+
                     </div>
+
+                    <div class="col-lg-6 col-md-8">
+
+                        <a href="#" v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex"
+                            class="btn btn-primary btn-lg shadow-sm fs-3 mx-2 " style="width: 80px; height: 70px; "
+                            v-on:click="clickTile(tile)">
+                            {{ tile.Asset }}
+                        </a>
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-2">
+                        <!-- Large button groups (default and split) -->
+                        <div id="players" class="row"></div>
+                        <div class="btn-group dropup">
+                            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Players
+                            </button>
+
+
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li v-for="(player, index) in GameData.PlayerList" class="dropdown-item"
+                                    v-bind:class="{'active' : index === ActivePlayerIndex}"
+                                    v-on:click="setActivePlayer(index)">
+                                    <span class="bi bi-person-circle">
+                                        {{ player.Display }}
+                                    </span>
+                                </li>
+                            </ul>
+
+                            <!-- Button trigger modal -->
+
+                        </div>
+
+                        <div class="btn-group dropup">
+                            <button type="button" class="col btn btn-lg btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#buyModel">
+                                Buy Stock
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </footer>
@@ -224,7 +259,9 @@
                 GameData: '',
                 appLoaded: false,
                 ActivePlayerIndex: 0,
-                InitialTileColorClasses : 'bg-secondary text-white'
+                InitialTileColorClasses: 'bg-secondary text-white',
+                TempCreateCorpArray: []
+
             },
 
             mounted() { // when the Vue app is booted up, this is run automatically.
@@ -233,7 +270,9 @@
                 this.appLoaded = true;
                 this.assignStartTiles();
                 this.assignInitialPlayerTiles();
-                console.log(data.Game);
+                //console.log(data.Game);
+                this.assignInitialCash();
+
 
             },
 
@@ -263,6 +302,11 @@
                     if (this.appLoaded) {
                         return this.getActivePlayer();
                     }
+                },
+                playerCash() {
+                    if (this.appLoaded) {
+                        return this.getPlayerCash();
+                    }
                 }
 
 
@@ -271,6 +315,17 @@
             },
             methods:
             {
+
+                assignInitialCash() {
+                    const pc = this.getPlayerCount();
+
+                    for (c = 0; c < pc; c++) {
+                        this.GameData.PlayerList[c].Cash = this.GameData.Setup.InitialCash;
+                    }
+
+                },
+
+
                 getRandomAvailableTiles: function (count, type) {
                     let randomTiles = [];
 
@@ -282,8 +337,7 @@
                         let rand = Math.floor(Math.random() * this.GameData.Tiles.length);
 
                         // 
-                        if (gd.Tiles[rand].Location == "Tile Box") 
-                        {
+                        if (gd.Tiles[rand].Location == "Tile Box") {
                             if (type == 'label' && !randomTiles.includes(gd.Tiles[rand].Asset)) {
                                 randomTiles.push(gd.Tiles[rand].Asset);
                             }
@@ -334,22 +388,18 @@
                     return player
                 },
 
-                getPlayerTileCount()
-                {
+                getPlayerTileCount() {
                     playerTileCount = 0;
-                    for (c = 0; c < this.totalTileCount; c++) 
-                    {
-                        if(this.ActivePlayerIndex == this.GameData.Tiles[c].Owner &&  this.GameData.Tiles[c].Location == 'Player')
-                        {
-                            playerTileCount ++;
+                    for (c = 0; c < this.totalTileCount; c++) {
+                        if (this.ActivePlayerIndex == this.GameData.Tiles[c].Owner && this.GameData.Tiles[c].Location == 'Player') {
+                            playerTileCount++;
                         }
                     }
 
                     return playerTileCount;
                 },
 
-                setActivePlayer(playerIndex)
-                {
+                setActivePlayer(playerIndex) {
                     this.ActivePlayerIndex = playerIndex;
                 },
 
@@ -388,8 +438,7 @@
                     }
                 },
 
-                clickTile(tile) 
-                {
+                clickTile(tile) {
                     console.log('clicked Tile: ' + tile.Asset);
                     this.checkSidesForTiles(tile);
 
@@ -397,14 +446,12 @@
                     // if there are less than 6 tiles, give a random tile to the player.
                     console.log(this.getPlayerTileCount());
 
-                    if(this.getPlayerTileCount() < 7 )
-                    {
+                    if (this.getPlayerTileCount() < 7) {
                         this.givePlayerTile();
                     }
                 },
 
-                givePlayerTile()
-                {
+                givePlayerTile() {
                     const randomTile = this.getRandomAvailableTiles(1, 'index');
                     this.GameData.Tiles[randomTile].Location = "Player";
                     this.GameData.Tiles[randomTile].Owner = this.ActivePlayerIndex;
@@ -417,6 +464,7 @@
                 checkSidesForTiles(tile) {
 
                     let foundSideTile = false;
+                    let sideTileIndexArray = [];
                     // console.log('clicked tile: ' + tile.label);
                     for (c = 0; c < this.totalTileCount; c++) {
                         const sideTile = this.GameData.Tiles[c].Asset
@@ -425,37 +473,36 @@
                         if (this.GameData.Tiles[c].Location == 'Board') // Will need to add more locations later.
                         {
                             //console.log(this.GameData.Tiles[c].Location);
-                            
+
                             const mergedClass = 'bg-primary bg-gradient text-white rounded shadow-sm';
 
-                            
+
                             let playerId = this.GameData.PlayerList[this.ActivePlayerIndex].Id
 
                             if (sideTile == tile.Left) {
                                 this.GameData.Tiles[c].StyleClass = mergedClass;
                                 this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
                                 foundSideTile = true;
-                            }
-                            else if (sideTile == tile.Right) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                            }
-                            else if (sideTile == tile.Up) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                            }
-                            else if (sideTile == tile.Down) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                            } else {
-                                foundSideTile = false;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = 'bg-secondary text-white rounded shadow-sm';
+                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
 
-                                this.GameData.Tiles[tile.AssetID].Location = "Board";
-                                this.GameData.Tiles[tile.AssetID].Owner = "";
+                            }
+                            if (sideTile == tile.Right) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
+                            }
+                            if (sideTile == tile.Up) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
+                            }
+                            if (sideTile == tile.Down) {
+                                this.GameData.Tiles[c].StyleClass = mergedClass;
+                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
+                                foundSideTile = true;
+                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
                             }
 
 
@@ -470,14 +517,51 @@
 
                     if (foundSideTile) {
 
-                        //var newCorpModal = new bootstrap.Modal(document.getElementById('newCorpModal'))
-                        //newCorpModal.show();
+                        var newCorpModal = new bootstrap.Modal(document.getElementById('startCorp'))
+                        newCorpModal.show();
                         //alert(tileLabel);
                         //listAvailableCorps();
+                        sideTileIndexArray.push(tile.AssetID);
+
+                        // Set the temp array so they can be used to update the tiles for the newly created Corp.
+                        this.TempCreateCorpArray = sideTileIndexArray;
+                        
+                    } else {
+                        foundSideTile = false;
+                        this.GameData.Tiles[tile.AssetID].StyleClass = 'bg-secondary text-white rounded shadow-sm';
+
+                        this.GameData.Tiles[tile.AssetID].Location = "Board";
+                        this.GameData.Tiles[tile.AssetID].Owner = "";
                     }
                     // return foundSideTile;
 
+                },
+                
+                createCorp(corp)
+                {
+                    
+                    console.log('temp array: ' + this.TempCreateCorpArray);
+                    for (c = 0; c < this.TempCreateCorpArray.length; c++)
+                    {
+                        const tileIndex = this.TempCreateCorpArray[c];
+                        console.log('tile Index: ' + tileIndex);
+                        this.GameData.Tiles[tileIndex].StyleClass = corp.StyleClass;
+                        this.GameData.Tiles[tileIndex].Location = corp.ID;
+                        this.GameData.Tiles[tileIndex].Status = 'Active';
+                    }
+
+                    var myModalEl = document.getElementById('startCorp');
+                    var modal = bootstrap.Modal.getInstance(myModalEl)
+                    modal.hide();
+
+                    //var modalToggle = document.getElementById('startCorp');
+                   // var myModal = new bootstrap.Modal(document.getElementById('startCorp'),{});
+                    //myModal.hide();
+
+                    this.TempCreateCorpArray = [];
                 }
+
+
             }
         })
 
