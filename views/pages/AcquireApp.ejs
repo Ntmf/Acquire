@@ -274,9 +274,8 @@
                 this.assignInitialPlayerTiles();
                 //console.log(data.Game);
                 this.assignInitialCash();
-               // this.labelToTileMap = this.createLabelToTileMap();
-                //this.indexToTileMap = this.createIndexToTileMap();
-                //console.log(this.labelToTileMap);
+                this.populateStockCount();
+
 
             },
 
@@ -333,7 +332,17 @@
             methods:
             {
 
-                assignInitialCash() {
+                populateStockCount()
+                {
+                    for (c = 0; c < corpArray.keys.length; c++) 
+                    {
+                        const stockLimit = this.GameData.StockLimit;
+                        this.GameData.Corporations[c].Count = stockLimit;
+                    }
+                },
+
+                assignInitialCash() 
+                {
                     const pc = this.getPlayerCount();
 
                     for (c = 0; c < pc; c++) {
@@ -522,6 +531,14 @@
                     // TODO:
                 },
 
+
+                isMerge()
+                {
+
+
+                },
+
+
                 /**
                  * 
                  */
@@ -544,6 +561,8 @@
                         
                         leftTile = this.labelToTileMap.get(tile.Left);
                         const corpArrayVar = this.corpArray;
+
+                        // if side tile is next to a corp, update tile
                         if(corpArrayVar.has(leftTile.Location))
                         {
                             console.log('matched w/ corp')
@@ -625,59 +644,6 @@
                         }
                     }
 
-
-
-                    /*
-                    for (c = 0; c < this.totalTileCount; c++) {
-                        const sideTile = this.GameData.Tiles[c].Asset
-                        //console.log('before State Check: ' + this.GameData.Tiles[c].Asset + ' ' + tile.Left + ' ' + tile.Right + ' ' + tile.Up + ' ' + tile.Down)
-
-                        if (this.GameData.Tiles[c].Location == 'Board') // Will need to add more locations later.
-                        {
-                            //console.log(this.GameData.Tiles[c].Location);
-
-                            const mergedClass = 'bg-primary bg-gradient text-white rounded shadow-sm';
-
-
-                            let playerId = this.GameData.PlayerList[this.ActivePlayerIndex].Id
-
-                            if (sideTile == tile.Left) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
-
-                            }
-                            if (sideTile == tile.Right) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
-                            }
-                            if (sideTile == tile.Up) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
-                            }
-                            if (sideTile == tile.Down) {
-                                this.GameData.Tiles[c].StyleClass = mergedClass;
-                                this.GameData.Tiles[tile.AssetID].StyleClass = mergedClass;
-                                foundSideTile = true;
-                                sideTileIndexArray.push(this.GameData.Tiles[c].AssetID);
-                            }
-
-
-                            if (foundSideTile) {
-                                //alert('Yay! You (' + tile.Asset + ') found a friend (' + sideTile + ') to the LEFT!')
-
-                                //break;
-                            }
-
-                        }
-                    }
-*/
-
                     if (foundSideTileCorp) {
 
                         if (foundSideTile)
@@ -731,7 +697,8 @@
                         console.log('tile Index: ' + tileIndex);
                         this.GameData.Tiles[tileIndex].StyleClass = corp.StyleClass;
                         this.GameData.Tiles[tileIndex].Location = corp.ID;
-                        this.GameData.Tiles[tileIndex].Status = 'Active';
+
+                        this.GameData.Corporations[corp.CorpDetailsID].Status = 'Active';
                     }
 
                     var myModalEl = document.getElementById('startCorp');
