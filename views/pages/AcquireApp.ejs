@@ -260,7 +260,8 @@
                 appLoaded: false,
                 ActivePlayerIndex: 0,
                 InitialTileColorClasses: 'bg-secondary text-white',
-                TempCreateCorpArray: []
+                TempCreateCorpArray: [],
+                corpArray: null
 
             },
 
@@ -268,11 +269,14 @@
                 var self = this // create a closure to access component in the callback below
                 self.GameData = data.Game;
                 this.appLoaded = true;
+                this.corpArray = this.getCorpArray();
                 this.assignStartTiles();
                 this.assignInitialPlayerTiles();
                 //console.log(data.Game);
                 this.assignInitialCash();
-
+               // this.labelToTileMap = this.createLabelToTileMap();
+                //this.indexToTileMap = this.createIndexToTileMap();
+                //console.log(this.labelToTileMap);
 
             },
 
@@ -307,10 +311,23 @@
                     if (this.appLoaded) {
                         return this.getPlayerCash();
                     }
+                },
+
+                labelToTileMap()
+                {
+                    if(this.appLoaded)
+                    {
+                        return this.getLabelToTileMap();
+                    }
+                },
+
+                indexToTileMap()
+                {
+                    if(this.appLoaded)
+                    {
+                        return this.getIndexToTileMap();
+                    }
                 }
-
-
-
 
             },
             methods:
@@ -323,6 +340,46 @@
                         this.GameData.PlayerList[c].Cash = this.GameData.Setup.InitialCash;
                     }
 
+                },
+
+                getCorpArray()
+                {
+                    const corpArray = new Map();
+                    const corpLength = this.GameData.Corporations.length;
+
+                    for (c = 0; c < corpLength; c++)
+                    {
+                        const corp = this.GameData.Corporations[c];
+                        corpArray.set(corp.ID, corp);
+                    }
+
+                    return corpArray;
+                },
+
+                getIndexToTileMap()
+                {
+                    const labelMap = new Map();
+                    console.log('totalTileCount: ' + this.totalTileCount);
+                    for (c = 0; c < this.totalTileCount; c++)
+                    {
+                        const tile = this.GameData.Tiles[c];
+                        labelMap.set(tile.AssetID, tile);
+                    }
+
+                    return labelMap;
+                },
+
+                getLabelToTileMap()
+                {
+                    const labelMap = new Map();
+
+                    for (c = 0; c < this.totalTileCount; c++)
+                    {
+                        const tile = this.GameData.Tiles[c];
+                        labelMap.set(tile.Asset, tile);
+                    }
+
+                    return labelMap;
                 },
 
 
@@ -375,7 +432,7 @@
 
                 // a computed getter
                 getPlayerCount: function () {
-                    console.log(this.GameData)
+                    //console.log(this.GameData)
                     // `this` points to the vm instance
                     return Object.keys(this.GameData.PlayerList).length
 
@@ -383,8 +440,10 @@
                 },
 
 
-                getActivePlayer() {
+                getActivePlayer() 
+                {
                     const player = this.GameData.PlayerList[this.ActivePlayerIndex]
+                    console.log('activePlayer: ' + player);   
                     return player
                 },
 
@@ -426,6 +485,8 @@
 
                 // This assigns the starting tile for each player and places on the board
                 assignStartTiles() {
+
+                    //TODO: ensure tiles are not next to each other.
                     const pc = this.getPlayerCount();
 
                     for (c = 0; c < pc; c++) {
@@ -461,11 +522,112 @@
                     // TODO:
                 },
 
-                checkSidesForTiles(tile) {
+                /**
+                 * 
+                 */
+                checkSidesForTiles(tile) 
+                {
+                    //TODO: Break up into smaller methods. 
 
                     let foundSideTile = false;
+                    let foundSideTileCorp = false;
                     let sideTileIndexArray = [];
                     // console.log('clicked tile: ' + tile.label);
+
+                    let leftTile = null;
+                    let rightTile = null;
+                    let upTile = null;
+                    let downTile = null;
+
+                    if(tile.Left)
+                    {
+                        
+                        leftTile = this.labelToTileMap.get(tile.Left);
+                        const corpArrayVar = this.corpArray;
+                        if(corpArrayVar.has(leftTile.Location))
+                        {
+                            console.log('matched w/ corp')
+                            // Matching corp tile.
+                            this.GameData.Tiles[tile.AssetID].StyleClass = leftTile.StyleClass;
+                            this.GameData.Tiles[tile.AssetID].Location = leftTile.Location;
+                            foundSideTileCorp = true;
+                        }
+                        
+                        if(leftTile.Location == 'Board')
+                        {
+                            foundSideTile = true;
+                            sideTileIndexArray.push(leftTile.AssetID);
+                        }
+                        
+                        
+                    }
+
+                    if(tile.Right)
+                    {
+                        console.log('right tile: ' + tile.Right);
+                        rightTile = this.labelToTileMap.get(tile.Right);
+                        const corpArrayVar = this.corpArray;
+                        if(corpArrayVar.has(rightTile.Location))
+                        {
+                            console.log('matched w/ corp')
+                            // Matching corp tile.
+                            this.GameData.Tiles[tile.AssetID].StyleClass = rightTile.StyleClass;
+                            this.GameData.Tiles[tile.AssetID].Location = rightTile.Location;
+                            foundSideTileCorp = true;
+                        }
+                        if(rightTile.Location == 'Board')
+                        {
+                            foundSideTile = true;
+                            sideTileIndexArray.push(rightTile.AssetID);
+                        }
+                    }
+
+                    if(tile.Up)
+                    {
+                        console.log('up tile: ' + tile.Up);
+                        upTile = this.labelToTileMap.get(tile.Up);
+                        const corpArrayVar = this.corpArray;
+
+                        if(corpArrayVar.has(upTile.Location))
+                        {
+                            console.log('matched w/ corp')
+                            // Matching corp tile.
+                            this.GameData.Tiles[tile.AssetID].StyleClass = upTile.StyleClass;
+                            this.GameData.Tiles[tile.AssetID].Location = upTile.Location;
+                            foundSideTileCorp = true;
+                        }
+                        
+                        if(upTile.Location == 'Board')
+                        {
+                            foundSideTile = true;
+                            sideTileIndexArray.push(upTile.AssetID);
+                        }
+                    }
+
+                    if(tile.Down)
+                    {
+                        console.log('down tile: ' + tile.Down);
+                        downTile = this.labelToTileMap.get(tile.Down);
+                        const corpArrayVar = this.corpArray;
+                        if(corpArrayVar.has(downTile.Location))
+                        {
+                            console.log('matched w/ corp')
+                            // Matching corp tile.
+                            this.GameData.Tiles[tile.AssetID].StyleClass = downTile.StyleClass;
+                            this.GameData.Tiles[tile.AssetID].Location = downTile.Location;
+                            foundSideTileCorp = true;
+                        }
+                        
+                        if(downTile.Location == 'Board')
+                        {
+                            foundSideTile = true;
+                            sideTileIndexArray.push(downTile.AssetID);
+                        }
+                    }
+
+
+
+                    /*
                     for (c = 0; c < this.totalTileCount; c++) {
                         const sideTile = this.GameData.Tiles[c].Asset
                         //console.log('before State Check: ' + this.GameData.Tiles[c].Asset + ' ' + tile.Left + ' ' + tile.Right + ' ' + tile.Up + ' ' + tile.Down)
@@ -514,9 +676,30 @@
 
                         }
                     }
+*/
 
-                    if (foundSideTile) {
+                    if (foundSideTileCorp) {
 
+                        if (foundSideTile)
+                        {
+
+                            // get updated style and assignment values.
+                            const updatedTile = this.GameData.Tiles[tile.AssetID];
+
+                            for (c = 0; c < sideTileIndexArray.length; c++)
+                            {
+                                const tileIndex = sideTileIndexArray[c];
+                                console.log('tile Index: ' + tileIndex);
+                                this.GameData.Tiles[tileIndex].StyleClass = updatedTile.StyleClass;
+                                this.GameData.Tiles[tileIndex].Location = updatedTile.ID;
+                                //this.GameData.Tiles[c].Status = 'Active';
+                            }
+                        }
+                        
+                    } 
+                    
+                    else if (foundSideTile)
+                    {
                         var newCorpModal = new bootstrap.Modal(document.getElementById('startCorp'))
                         newCorpModal.show();
                         //alert(tileLabel);
@@ -525,8 +708,8 @@
 
                         // Set the temp array so they can be used to update the tiles for the newly created Corp.
                         this.TempCreateCorpArray = sideTileIndexArray;
-                        
-                    } else {
+                    }
+                    else {
                         foundSideTile = false;
                         this.GameData.Tiles[tile.AssetID].StyleClass = 'bg-secondary text-white rounded shadow-sm';
 
@@ -541,6 +724,7 @@
                 {
                     
                     console.log('temp array: ' + this.TempCreateCorpArray);
+                    
                     for (c = 0; c < this.TempCreateCorpArray.length; c++)
                     {
                         const tileIndex = this.TempCreateCorpArray[c];
