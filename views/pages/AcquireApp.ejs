@@ -22,7 +22,7 @@
     <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="bg-dark">
+<body >
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -31,226 +31,253 @@
 
 
 
+        <div :style="backgroundStyleObj" class="box">
 
-        <div class="container">
 
+                <div class="row py-2">
+                   
+                </div>
+                <div class="row py-2">
+                    <div class="col-lg-2">
+                        <div class="row">
+                            <div class="card ms-2">
+                                <h5 class="card-header">
+                                    Stats
+                                </h5>
+                                <div class="card-body">
+                                    <div id="playerTiles" class="row">
+                                        <ul class="list-group list-group">
+                                            <li class="col list-group-item">Player Count: {{ playerCount }}</li>
+                                            <li class="col list-group-item">Available Tile Count: {{ availableTileCount }}</li>
+                                            <li class="col list-group-item">Active Player Index: {{ ActivePlayerIndex }}</li>
+                                        </ul>
 
-            <div class="row py-2">
-                <div class="col">
-                    <div class="card">
-                        <h5 class="card-header">
-                            Stats
-                        </h5>
-                        <div class="card-body">
-                            <div id="playerTiles" class="row">
-                                <ul class="list-group list-group-horizontal">
-                                    <li class="col list-group-item">Player Count: {{ playerCount }}</li>
-                                    <li class="col list-group-item">Available Tile Count: {{ availableTileCount }}</li>
-                                    <li class="col list-group-item">Active Player Index: {{ ActivePlayerIndex }}</li>
-                                </ul>
-
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row py-2">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
-                                <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select"
-                                    v-bind:id="tile.AssetID" v-on:click="clickTile(tile)"
-                                    v-bind:class="tile.StyleClass">
-                                    {{ tile.Asset }}
+                        <div class="row">
+                            <div class="card border-secondary ms-2 mt-2">
+                                <div class="card-body">
+        
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <!--<th scope="row">1</th>-->
+                                                <td colspan="2" class="fw-bold">Player Cash</td>
+                                                <td class="text-end">${{activePlayer.Cash}}</td>
+                                            </tr>
+                                            <tr>
+                                                <!--<th scope="row">2</th>-->
+                                                <td colspan="2" class="fw-bold">Stock Portfolio</td>
+                                                <td class="fw-bold text-end">Value</td>
+                                            </tr>
+        
+                                            <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
+                                                <td>{{ portfolio.Display }}</td>
+                                                <td>{{ portfolio.Count }}</td>
+                                                <td class="text-end">$400</td>
+                                            </tr>
+                                            <tr>
+                                                <!--  <th scope="row">3</th>-->
+                                                <td colspan="2" class="fw-bold">Net Worth</td>
+                                                <td class="text-end fw-bold">$800</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-
-            <!--Create Corp Modal -->
-            <div class="modal fade" id="startCorp" tabindex="-1" aria-labelledby="startCorpLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="startCorpLabel">Start Corp</h5>
-                            <!--
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            -->
-                        </div>
-                        <div class="modal-body">
-                            <!-- On rows -->
-                            <div v-for="(corp, index) in GameData.Corporations" v-if="corp.Status === 'Inactive' ">
-
-                                <div class="card mb-3"  v-bind:class="corp.StyleClass" v-on:click="createCorp(corp)">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ corp.Name}}</h5>
+                    <div class="col-lg-10">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
+                                    <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select"
+                                        v-bind:id="tile.AssetID" v-on:click="clickTile(tile)"
+                                        v-bind:class="tile.StyleClass">
+                                        {{ tile.Asset }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
+                <!--Create Corp Modal -->
+                <div class="modal fade" id="startCorp" tabindex="-1" aria-labelledby="startCorpLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="startCorpLabel">Start Corp</h5>
+                                <!--
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                -->
+                            </div>
+                            <div class="modal-body">
+                                <!-- On rows -->
+                                <div v-for="(corp, index) in GameData.Corporations" v-if="corp.Status === 'Inactive' ">
 
-            <!-- Buy Stock Modal -->
-            <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-
-                            <table class="table">
-                                <!-- <thead>
-                    <tr>
-                        <th scope="col">Action</th>
-                        <th scope="col">Corporation</th>
-                        <th scope="col">Cost</th>
-                    </tr>
-                </thead>
-            -->
-
-                                <tbody>
-                                    <!-- On rows -->
-                                    <tr v-for="(corp, index) in GameData.Corporations">
-                                        <td>
-
-                                            {{ corp.Count}}
-                                        </td>
-                                        <td>
-                                            <span class="p-2 m-1 text-white" v-bind:class="corp.StyleClass">{{
-                                                corp.ShortName }}</span>
-                                            {{ corp.Name}}
-                                        </td>
-                                        <td>$000</td>
-                                        <td>
-
-                                            <div class="btn-group">
-                                                <a href="#" class="btn btn-light">-</a>
-                                                <a href="#" class="btn btn-light">+</a>
-                                            </div>
-                                        </td>
-
-                                        <td>2</td>
-                                    </tr>
-
-                                    <tr></tr>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                                    <div class="card mb-3"  v-bind:class="corp.StyleClass" v-on:click="createCorp(corp)">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ corp.Name}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                
 
+                <!--Create Corp Modal -->
+                <div class="modal fade" id="customizeModal" tabindex="-1" aria-labelledby="customizeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="customizeModalLabel">Customize</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            
+                                <div class="mb-3">
+                                    <label for="bc" class="form-label">Background Color</label>
+                                    <input type="text" class="form-control" id="bc"  v-model="backgroundStyleObj.backgroundColor">
+                                </div>
 
-
-
-        </div>
-
-        <div class="position-relative">
-            <div class="position-sticky bottom-0 start-0">
-                <div class="d-inline-flex p-2 bd-highlight">
-                    <div class="card border-secondary">
-                        <div class="card-body">
-
-                            <table class="table table-sm table-borderless">
-                                <tbody>
-                                    <tr>
-                                        <!--<th scope="row">1</th>-->
-                                        <td colspan="2" class="fw-bold">Player Cash</td>
-                                        <td class="text-end">${{activePlayer.Cash}}</td>
-                                    </tr>
-                                    <tr>
-                                        <!--<th scope="row">2</th>-->
-                                        <td colspan="2" class="fw-bold">Stock Portfolio</td>
-                                        <td class="fw-bold text-end">Value</td>
-                                    </tr>
-
-                                    <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
-                                        <td>{{ portfolio.Display }}</td>
-                                        <td>{{ portfolio.Count }}</td>
-                                        <td class="text-end">$400</td>
-                                    </tr>
-                                    <tr>
-                                        <!--  <th scope="row">3</th>-->
-                                        <td colspan="2" class="fw-bold">Net Worth</td>
-                                        <td class="text-end fw-bold">$800</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button v-on:click="setLocalStorageSettings()" data-bs-dismiss="modal" type="button" class="btn btn-primary" >Save changes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+
+                <!-- Buy Stock Modal -->
+                <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <table class="table">
+                                    <!-- <thead>
+                        <tr>
+                            <th scope="col">Action</th>
+                            <th scope="col">Corporation</th>
+                            <th scope="col">Cost</th>
+                        </tr>
+                    </thead>
+                -->
+
+                                    <tbody>
+                                        <!-- On rows -->
+                                        <tr v-for="(corp, index) in GameData.Corporations" v-if="corp.Status === 'Active' ">
+                                            <td>
+
+                                                {{ corp.Count}}
+                                            </td>
+                                            <td>
+                                                <span class="p-2 m-1 text-white" v-bind:class="corp.StyleClass">{{
+                                                    corp.ShortName }}</span>
+                                                {{ corp.Name}}
+                                            </td>
+                                            <td>$000</td>
+                                            <td>
+
+                                                <div class="btn-group">
+                                                    <a href="#" class="btn btn-light">-</a>
+                                                    <a href="#" class="btn btn-light">+</a>
+                                                </div>
+                                            </td>
+
+                                            <td>2</td>
+                                        </tr>
+
+                                        <tr></tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
         </div>
+        
 
         <footer class="footer mt-auto py-3 bg-light fixed-bottom">
-            <div class="container">
-                <div id="playerTiles" class="row">
-                    <div class="col-lg-3 col-md-2">
-
-                    </div>
-
-                    <div class="col-lg-6 col-md-8">
-
-                        <a href="#" v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex"
-                            class="btn btn-primary btn-lg shadow-sm fs-3 mx-2 " style="width: 80px; height: 70px; "
-                            v-on:click="clickTile(tile)">
-                            {{ tile.Asset }}
-                        </a>
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-2">
-                        <!-- Large button groups (default and split) -->
-                        <div id="players" class="row"></div>
-                        <div class="btn-group dropup">
-                            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Players
-                            </button>
-
-
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li v-for="(player, index) in GameData.PlayerList" class="dropdown-item"
-                                    v-bind:class="{'active' : index === ActivePlayerIndex}"
-                                    v-on:click="setActivePlayer(index)">
-                                    <span class="bi bi-person-circle">
-                                        {{ player.Display }}
-                                    </span>
-                                </li>
-                            </ul>
-
-                            <!-- Button trigger modal -->
-
-                        </div>
-
-                        <div class="btn-group dropup">
-                            <button type="button" class="col btn btn-lg btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#buyModel">
-                                Buy Stock
-                            </button>
-                        </div>
-                    </div>
+            <div id="playerTiles" class="row">
+                <div class="col-lg-3 col-md-2">
 
                 </div>
+
+                <div class="col-lg-6 col-md-8">
+
+                    <a href="#" v-for="(tile, index) in GameData.Tiles" v-if="tile.Owner === ActivePlayerIndex"
+                        class="btn btn-primary btn-lg shadow-sm fs-3 mx-2 " style="width: 80px; height: 70px; "
+                        v-on:click="clickTile(tile)">
+                        {{ tile.Asset }}
+                    </a>
+
+                </div>
+
+                <div class="col-lg-3 col-md-2">
+                    <!-- Large button groups (default and split) -->
+                    <div id="players" class="row"></div>
+                    <div class="btn-group dropup">
+                        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Players
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li v-for="(player, index) in GameData.PlayerList" class="dropdown-item"
+                                v-bind:class="{'active' : index === ActivePlayerIndex}"
+                                v-on:click="setActivePlayer(index)">
+                                <span class="bi bi-person-circle">
+                                    {{ player.Display }}
+                                </span>
+                            </li>
+                        </ul>
+
+                        <!-- Button trigger modal -->
+
+                    </div>
+
+                    <div class="btn-group dropup">
+                        <button type="button" class="col btn btn-lg btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#buyModel">
+                            Buy Stock
+                        </button>
+                    </div>
+
+                    <div class="btn-group dropup">
+                        <button type="button" class="col btn btn-lg btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#customizeModal">
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </footer>
     </div>
+
 
     <script>
         var app = new Vue({
@@ -261,7 +288,12 @@
                 ActivePlayerIndex: 0,
                 InitialTileColorClasses: 'bg-secondary text-white',
                 TempCreateCorpArray: [],
-                corpArray: null
+                corpArray: null,
+                backgroundStyleObj :
+                {
+                    backgroundColor :'black'
+                } 
+                
 
             },
 
@@ -275,6 +307,7 @@
                 //console.log(data.Game);
                 this.assignInitialCash();
                 this.populateStockCount();
+                this.getLocalStorageSettings();
 
 
             },
@@ -332,11 +365,29 @@
             methods:
             {
 
+                getLocalStorageSettings()
+                {
+
+                    let bgc = localStorage.getItem('bgc');
+                     
+                    if(bgc)
+                    {
+                        this.backgroundStyleObj.backgroundColor = bgc;
+                    }
+                },
+
+                setLocalStorageSettings()
+                {
+                    let bgc = localStorage.setItem('bgc',this.backgroundStyleObj.backgroundColor);
+                },
+
                 populateStockCount()
                 {
-                    for (c = 0; c < corpArray.keys.length; c++) 
+                    const stockLimit = this.GameData.Setup.StockLimit;
+                    const corpLength = this.GameData.Corporations.length;
+
+                    for (c = 0; c < corpLength; c++) 
                     {
-                        const stockLimit = this.GameData.StockLimit;
                         this.GameData.Corporations[c].Count = stockLimit;
                     }
                 },
@@ -710,7 +761,18 @@
                     //myModal.hide();
 
                     this.TempCreateCorpArray = [];
+                },
+
+                customizeModal()
+                {
+
+
+                    var myModalEl = document.getElementById('bc');
+                    var modal = bootstrap.Modal.getInstance(myModalEl)
+                    modal.hide();
                 }
+
+            
 
 
             }
