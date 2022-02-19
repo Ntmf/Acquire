@@ -76,6 +76,11 @@ let data =
             "DefaultColor": "red",
             "Status": "Inactive",
             "StyleClass": "bg-primary text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "salmon",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -87,6 +92,11 @@ let data =
             "DefaultColor": "yellow",
             "Status": "Inactive",
             "StyleClass": "bg-success text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "yellow",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -98,6 +108,11 @@ let data =
             "DefaultColor": "dark-blue",
             "Status": "Inactive",
             "StyleClass": "bg-danger text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "darkblue",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -109,6 +124,11 @@ let data =
             "DefaultColor": "green",
             "Status": "Inactive",
             "StyleClass": "bg-warning text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "seagreen",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -120,6 +140,11 @@ let data =
             "DefaultColor": "brown",
             "Status": "Inactive",
             "StyleClass": "bg-info text-dark",
+            "StyleObject":
+            {
+              "bacgroundColor" : "brown",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -131,6 +156,11 @@ let data =
             "DefaultColor": "light-blue",
             "Status": "Inactive",
             "StyleClass": "bg-secondary text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "lightseagreen",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           },
@@ -142,6 +172,11 @@ let data =
             "DefaultColor": "pink",
             "Status": "Inactive",
             "StyleClass": "bg-dark text-white",
+            "StyleObject":
+            {
+              "bacgroundColor" : "hotpink",
+              "color": "white"
+            },
             "Count": 0,
             "Tiles": []
           }

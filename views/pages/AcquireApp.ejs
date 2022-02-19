@@ -28,17 +28,12 @@
         <![endif]-->
 
     <div id="app">
-
-
-
         <div :style="backgroundStyleObj" class="box">
-
-
                 <div class="row py-2">
                    
                 </div>
                 <div class="row py-2">
-                    <div class="col-lg-2">
+                    <div class="col-xlg-2 col-lg-3 col-md-4">
                         <div class="row">
                             <div class="card ms-2">
                                 <h5 class="card-header">
@@ -90,7 +85,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-10">
+                    <div class="col-xlg-10 col-lg-9 col-md-8">
                         <div class="card">
                             <div class="card-body">
                                 <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
@@ -134,7 +129,7 @@
 
                 <!--Create Corp Modal -->
                 <div class="modal fade" id="customizeModal" tabindex="-1" aria-labelledby="customizeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="customizeModalLabel">Customize</h5>
@@ -145,6 +140,16 @@
                                 <div class="mb-3">
                                     <label for="bc" class="form-label">Background Color</label>
                                     <input type="text" class="form-control" id="bc"  v-model="backgroundStyleObj.backgroundColor">
+                                </div>
+
+                                <div  class="mb-3" >
+
+                                    <div class="row align-items-start">
+                                        <div v-for="(corp, index) in GameData.Corporations" class="col">
+                                            <label for="exampleColorInput" class="form-label">{{ corp.Name}}</label>
+                                            <input type="color" class="form-control form-control-color" id="exampleColorInput" v-model="corp.StyleObject.bacgroundColor" title="Choose your color">
+                                        </div>
+                                      </div> 
                                 </div>
 
                             </div>
@@ -158,11 +163,11 @@
 
 
                 <!-- Buy Stock Modal -->
-                <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="buyModel" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Buy Stock</h5>
+                                <h5 class="modal-title" id="buyModalLabel">Buy Stock</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
