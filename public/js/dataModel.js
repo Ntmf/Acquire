@@ -78,7 +78,7 @@ let data =
             "StyleClass": "bg-primary text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "salmon",
+              "bacgroundColor" : "#FA8072",
               "color": "white"
             },
             "Count": 0,
@@ -94,7 +94,7 @@ let data =
             "StyleClass": "bg-success text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "yellow",
+              "bacgroundColor" : "#FFD700",
               "color": "white"
             },
             "Count": 0,
@@ -110,7 +110,7 @@ let data =
             "StyleClass": "bg-danger text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "darkblue",
+              "bacgroundColor" : "#000080",
               "color": "white"
             },
             "Count": 0,
@@ -126,7 +126,7 @@ let data =
             "StyleClass": "bg-warning text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "seagreen",
+              "bacgroundColor" : "#2E8B57",
               "color": "white"
             },
             "Count": 0,
@@ -142,7 +142,7 @@ let data =
             "StyleClass": "bg-info text-dark",
             "StyleObject":
             {
-              "bacgroundColor" : "brown",
+              "bacgroundColor" : "#A0522D",
               "color": "white"
             },
             "Count": 0,
@@ -158,7 +158,7 @@ let data =
             "StyleClass": "bg-secondary text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "lightseagreen",
+              "bacgroundColor" : "#20B2AA",
               "color": "white"
             },
             "Count": 0,
@@ -174,7 +174,7 @@ let data =
             "StyleClass": "bg-dark text-white",
             "StyleObject":
             {
-              "bacgroundColor" : "hotpink",
+              "bacgroundColor" : "#FF69B4",
               "color": "white"
             },
             "Count": 0,
