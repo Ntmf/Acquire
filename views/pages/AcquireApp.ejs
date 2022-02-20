@@ -70,7 +70,7 @@
                                             </tr>
         
                                             <tr v-for="(portfolio, index) in activePlayer.PlayerPortfolio">
-                                                <td>{{ portfolio.Display }}</td>
+                                                <td>{{ portfolio.Name }}</td>
                                                 <td>{{ portfolio.Count }}</td>
                                                 <td class="text-end">$400</td>
                                             </tr>
@@ -79,6 +79,32 @@
                                                 <td colspan="2" class="fw-bold">Net Worth</td>
                                                 <td class="text-end fw-bold">$800</td>
                                             </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="card border-secondary ms-2 mt-2">
+                                <div class="card-body">
+
+                                    <table class="table">
+                                        <tbody>
+                                            <!-- On rows -->
+                                            <tr v-for="(corp, index) in CorpCounts" v-if="corp.Status === 'Active' ">
+                                                <td>
+    
+                                                    {{ corp.Name }}
+                                                </td>
+                                                <td>
+                                                    {{ corp.CorpTileCount}}
+                                                </td>
+
+                                            </tr>
+    
+                                            <tr></tr>
+    
                                         </tbody>
                                     </table>
                                 </div>
@@ -93,7 +119,7 @@
                                 <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
                                     <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select"
                                         v-bind:id="tile.AssetID" v-on:click="clickTile(tile)"
-                                        v-bind:style="tile.StyleObject"data-bs-toggle="tooltip" data-bs-html="true" v-bind:title="tile">
+                                        v-bind:style="tile.StyleObject"data-bs-toggle="tooltip" data-bs-html="true" v-bind:title="tile.Owner">
                                         {{ tile.Asset }}
                                     </div>
                                 </div>
@@ -377,11 +403,41 @@
                     {
                        return this.getPlayerTileCount();
                     }
+                },
+
+                CorpCounts()
+                {
+                    if(this.appLoaded)
+                    {
+                       return this.getCorpTileCounts();
+                    }
                 }
+
             },
             methods:
             {
 
+                getCorpTileCounts()
+                {
+                    const corpCountMap = new Map();
+
+                    for(c = 0; c < this.totalTileCount; c++)
+                    {
+                        let tileOwner = this.GameData.Tiles[c].Owner;
+
+                        if(this.corpArray.has(this.GameData.Tiles[c].Owner))
+                        {
+                            let corpMapItem = corpCountMap.get(tileOwner)
+
+                            let corp = this.corpArray.get(tileOwner)
+
+                            this.GameData.Corporations[corp.CorpDetailsID].CorpTileCount += 1;
+                        }
+                    }
+
+                    return this.GameData.Corporations;
+
+                },
                 getLocalStorageSettings()
                 {
 
@@ -736,7 +792,11 @@
                     
                     else if (foundSideTile)
                     {
-                        var newCorpModal = new bootstrap.Modal(document.getElementById('startCorp'))
+                        var newCorpModal = new bootstrap.Modal(document.getElementById('startCorp'),
+                        {
+                            backdrop : 'static',
+                            keyboard : false
+                        })
                         newCorpModal.show();
                         //alert(tileLabel);
                         //listAvailableCorps();
@@ -767,9 +827,20 @@
                         console.log('tile Index: ' + tileIndex);
                         this.GameData.Tiles[tileIndex].StyleObject = corp.StyleObject;
                         this.GameData.Tiles[tileIndex].Location = corp.ID;
+                        this.GameData.Tiles[tileIndex].Owner = corp.ID;
 
                         this.GameData.Corporations[corp.CorpDetailsID].Status = 'Active';
                     }
+
+                    this.GameData.PlayerList[this.ActivePlayerIndex].PlayerPortfolio.push(
+                        {
+                            "Name": corp.Name,
+                            "ID": corp.ID,
+                            "Count": 1
+                        }
+                    )
+
+                    this.GameData.Corporations[corp.CorpDetailsID].Count += -1;
 
                     var myModalEl = document.getElementById('startCorp');
                     var modal = bootstrap.Modal.getInstance(myModalEl)
@@ -781,6 +852,8 @@
 
                     this.TempCreateCorpArray = [];
                 },
+
+
 
                 customizeModal()
                 {
