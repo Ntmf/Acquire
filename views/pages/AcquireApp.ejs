@@ -86,13 +86,14 @@
                         </div>
                     </div>
 
+                    <!-- Gameboard section-->
                     <div class="col-xlg-10 col-lg-9 col-md-8">
                         <div class="card">
                             <div class="card-body">
                                 <div id="gameBoard" style="--grid-rows: 9; --grid-cols: 12;">
                                     <div v-for="(tile, index) in GameData.Tiles" class="grid-item disable-select"
                                         v-bind:id="tile.AssetID" v-on:click="clickTile(tile)"
-                                        v-bind:style="tile.StyleObject">
+                                        v-bind:style="tile.StyleObject"data-bs-toggle="tooltip" data-bs-html="true" v-bind:title="tile">
                                         {{ tile.Asset }}
                                     </div>
                                 </div>
@@ -577,6 +578,8 @@
 
                 clickTile(tile) {
                     console.log('clicked Tile: ' + tile.Asset);
+                    
+                    this.GameData.Tiles[tile.AssetID].Owner = "";
                     this.checkSidesForTiles(tile);
 
 
