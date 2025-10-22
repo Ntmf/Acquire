@@ -63,8 +63,7 @@ let data =
             "StyleClass": "bg-primary text-white",
             "StyleObject":
             {
-              "background-color" : "#FA8072",
-              "color" : "white"
+              "--tile-color": "#ff9770"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -81,8 +80,7 @@ let data =
             "StyleClass": "bg-success text-white",
             "StyleObject":
             {
-              "background-color" : "#FFD700",
-              "color": "white"
+              "--tile-color": "#f8d06f"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -99,8 +97,7 @@ let data =
             "StyleClass": "bg-danger text-white",
             "StyleObject":
             {
-              "background-color" : "#000080",
-              "color": "white"
+              "--tile-color": "#67a7ff"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -117,8 +114,7 @@ let data =
             "StyleClass": "bg-warning text-white",
             "StyleObject":
             {
-              "background-color" : "#2E8B57",
-              "color": "white"
+              "--tile-color": "#52d6b8"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -135,8 +131,7 @@ let data =
             "StyleClass": "bg-info text-dark",
             "StyleObject":
             {
-              "background-color" : "#A0522D",
-              "color": "white"
+              "--tile-color": "#ffb257"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -153,8 +148,7 @@ let data =
             "StyleClass": "bg-secondary text-white",
             "StyleObject":
             {
-              "background-color" : "#20B2AA",
-              "color": "white"
+              "--tile-color": "#64b9ff"
             },
             "Count": 0,
             "CorpTileCount": 0,
@@ -171,8 +165,7 @@ let data =
             "StyleClass": "bg-dark text-white",
             "StyleObject":
             {
-              "background-color" : "#FF69B4",
-              "color": "white"
+              "--tile-color": "#d68cff"
             },
             "Count": 0,
             "CorpTileCount": 0,
